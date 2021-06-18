@@ -101,6 +101,7 @@ public class FileSystemWatchService {
             relativePath = path.substring(length);
           }
           for (FileChangeWatcher watcher : watchers) {
+            System.out.println("Huzx==> Watch Type:" + type.toString() + ", file:" + file.getAbsolutePath());
             switch (type) {
             case CREATE:
               watcher.onEntryAdded(relativePath);
