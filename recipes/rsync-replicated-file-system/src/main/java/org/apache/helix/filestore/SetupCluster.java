@@ -57,7 +57,7 @@ public class SetupCluster {
       // add state model definition
       StateModelConfigGenerator generator = new StateModelConfigGenerator();
       admin.addStateModelDef(clusterName, DEFAULT_STATE_MODEL,
-          new StateModelDefinition(generator.generateConfigForOnlineOffline()));
+          new StateModelDefinition(generator.generateConfigForMasterSlave()));
       // addNodes
       for (int i = 0; i < numNodes; i++) {
         String port = "" + (12001 + i);
@@ -72,7 +72,7 @@ public class SetupCluster {
       String resourceName = DEFAULT_RESOURCE_NAME;
       admin.addResource(clusterName, resourceName, DEFAULT_PARTITION_NUMBER, DEFAULT_STATE_MODEL,
           RebalanceMode.SEMI_AUTO.toString());
-      admin.rebalance(clusterName, resourceName, 1);
+      admin.rebalance(clusterName, resourceName, 3);
 
     } finally {
       if (zkclient != null) {
