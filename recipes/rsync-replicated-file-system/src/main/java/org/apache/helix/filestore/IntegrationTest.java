@@ -44,6 +44,14 @@ public class IntegrationTest {
   public static void main(String[] args) throws InterruptedException {
     ZkServer server = null;
 
+    if (args.length < 1) {
+      System.err
+              .println("USAGE: java IntegrationTest zookeeperAddress(e.g. localhost:2181)");
+      System.exit(1);
+    }
+
+    final String zkAddress = args[0];
+    final int    zkPort = Integer.valueOf(args[0].split(":")[1]);
     try {
       String baseDir = "/tmp/IntegrationTest/";
       final String dataDir = baseDir + "zk/dataDir";
@@ -57,8 +65,6 @@ public class IntegrationTest {
 
         }
       };
-      int zkPort = 2199;
-      final String zkAddress = "localhost:" + zkPort;
 
       server = new ZkServer(dataDir, logDir, defaultNameSpace, zkPort);
       server.start();
