@@ -119,6 +119,7 @@ public class ChangeLogGenerator implements FileChangeWatcher {
     out.writeUTF(record.file);
     out.flush();
     entriesLogged++;
+    System.out.println("Huzx=> get change log[" + record.toString() + "]");
     if (entriesLogged == 10000) {
       entriesLogged = 0;
       out.close();

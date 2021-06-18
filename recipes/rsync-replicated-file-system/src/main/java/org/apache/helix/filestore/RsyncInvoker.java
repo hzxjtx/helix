@@ -39,7 +39,7 @@ public class RsyncInvoker {
       ProcessBuilder pb =
           new ProcessBuilder("rsync", remoteLogDir + "/" + relativePath, localLogDir);
       System.out.println("Rsyncing source:" + remoteLogDir + "/" + relativePath + " dest:"
-          + localLogDir);
+          + localLogDir + ", with Command:" + pb.command().toString());
       ExternalCommand ec = new ExternalCommand(pb);
       ec.start();
       exitVal = ec.waitFor();

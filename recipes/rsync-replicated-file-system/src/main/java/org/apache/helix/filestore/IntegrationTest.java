@@ -128,9 +128,10 @@ public class IntegrationTest {
 
       for (int i = 0; i < 100; i++) {
         String fileName = "/filestore/" + String.valueOf(i).toString() + ".txt";
-        FileUtils.writeStringToFile(new File(baseDir + "localhost_12002" + fileName),
+        FileUtils.writeStringToFile(new File(baseDir + "localhost_12001" + fileName),
                 "some_data in " + fileName);
-        Thread.sleep(5000);
+        System.out.println("Writing files on localhost_12001 with file:" + fileName);
+        Thread.sleep(2000);
       }
       listFiles(baseDir);
     } catch (Exception e) {
