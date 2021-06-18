@@ -68,18 +68,20 @@ public class IntegrationTest {
       setup.rebalanceResource(clusterName, "repository", 3);
       // Set the configuration
       final String instanceName1 = "localhost_12001";
-      addConfiguration(setup, baseDir, clusterName, instanceName1);
       final String instanceName2 = "localhost_12002";
-      addConfiguration(setup, baseDir, clusterName, instanceName2);
       final String instanceName3 = "localhost_12003";
+      /*
+      addConfiguration(setup, baseDir, clusterName, instanceName1);
+      addConfiguration(setup, baseDir, clusterName, instanceName2);
       addConfiguration(setup, baseDir, clusterName, instanceName3);
+       */
       Thread thread1 = new Thread(new Runnable() {
         @Override
         public void run() {
           FileStore fileStore = null;
 
           try {
-            fileStore = new FileStore(zkAddress, clusterName, instanceName1);
+            fileStore = new FileStore(zkAddress, clusterName, instanceName1, baseDir);
             fileStore.connect();
           } catch (Exception e) {
             System.err.println("Exception" + e);
@@ -93,7 +95,7 @@ public class IntegrationTest {
 
         @Override
         public void run() {
-          FileStore fileStore = new FileStore(zkAddress, clusterName, instanceName2);
+          FileStore fileStore = new FileStore(zkAddress, clusterName, instanceName2, baseDir);
           fileStore.connect();
         }
       });
@@ -102,7 +104,7 @@ public class IntegrationTest {
 
         @Override
         public void run() {
-          FileStore fileStore = new FileStore(zkAddress, clusterName, instanceName3);
+          FileStore fileStore = new FileStore(zkAddress, clusterName, instanceName3, baseDir);
           fileStore.connect();
         }
       });
