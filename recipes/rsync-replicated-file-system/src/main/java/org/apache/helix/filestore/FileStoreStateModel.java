@@ -50,6 +50,7 @@ public class FileStoreStateModel extends StateModel {
     @Override
     public ZNRecord update(ZNRecord currentData) {
       ZNRecord newRec = new ZNRecord(message.getResourceName());
+      System.out.println("====>Huzx=>Get Update Msg:" + message.getResourceName());
 
       if (currentData != null) {
         int currentGen = convertToInt(newRec.getSimpleField("currentGen"), 0);
@@ -105,6 +106,7 @@ public class FileStoreStateModel extends StateModel {
     String instanceName = manager.getInstanceName();
     instanceConfig = manager.getClusterManagmentTool().getInstanceConfig(clusterName, instanceName);
     replicator = new Replicator(instanceConfig, resource, partition);
+    System.out.println("===>Huzx: Init FileStoreStateModel: ClusterName:" + clusterName + ", InstanceName:" + instanceName);
     try {
       manager.addExternalViewChangeListener(replicator);
     } catch (Exception e) {

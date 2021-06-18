@@ -39,11 +39,11 @@ import org.apache.helix.zookeeper.zkclient.ZkClient;
 import org.apache.helix.zookeeper.zkclient.ZkServer;
 
 
-public class IntegrationTest {
+public class IntegrationTest1 {
 
   public static void main(String[] args) throws InterruptedException {
     final String zkAddress = "172.20.3.83";
-    final int    zkPort =  2181;
+    final int    zkPort = 2181;
     try {
       String baseDir = "/tmp/IntegrationTest/";
       final String dataDir = baseDir + "zk/dataDir";
@@ -57,15 +57,9 @@ public class IntegrationTest {
 
         }
       };
-      ClusterSetup setup = new ClusterSetup(zkAddress);
+
       final String clusterName = "file-store-test";
-      setup.deleteCluster(clusterName);
-      setup.addCluster(clusterName, true);
-      setup.addInstanceToCluster(clusterName, "localhost_12001");
-      setup.addInstanceToCluster(clusterName, "localhost_12002");
-      setup.addInstanceToCluster(clusterName, "localhost_12003");
-      setup.addResourceToCluster(clusterName, "repository", 1, "MasterSlave");
-      setup.rebalanceResource(clusterName, "repository", 3);
+      ClusterSetup setup = new ClusterSetup(zkAddress);
       // Set the configuration
       final String instanceName1 = "localhost_12001";
       addConfiguration(setup, baseDir, clusterName, instanceName1);
@@ -73,50 +67,7 @@ public class IntegrationTest {
       addConfiguration(setup, baseDir, clusterName, instanceName2);
       final String instanceName3 = "localhost_12003";
       addConfiguration(setup, baseDir, clusterName, instanceName3);
-      Thread thread1 = new Thread(new Runnable() {
-        @Override
-        public void run() {
-          FileStore fileStore = null;
 
-          try {
-            fileStore = new FileStore(zkAddress, clusterName, instanceName1);
-            fileStore.connect();
-          } catch (Exception e) {
-            System.err.println("Exception" + e);
-            fileStore.disconnect();
-          }
-        }
-
-      });
-      // START NODES
-      Thread thread2 = new Thread(new Runnable() {
-
-        @Override
-        public void run() {
-          FileStore fileStore = new FileStore(zkAddress, clusterName, instanceName2);
-          fileStore.connect();
-        }
-      });
-      // START NODES
-      Thread thread3 = new Thread(new Runnable() {
-
-        @Override
-        public void run() {
-          FileStore fileStore = new FileStore(zkAddress, clusterName, instanceName3);
-          fileStore.connect();
-        }
-      });
-      System.out.println("STARTING NODES");
-      thread1.start();
-      thread2.start();
-      thread3.start();
-
-      // Start Controller
-      final HelixManager manager =
-          HelixControllerMain.startHelixController(zkAddress, clusterName, "controller",
-              HelixControllerMain.STANDALONE);
-      Thread.sleep(5000);
-      printStatus(manager);
       listFiles(baseDir);
       System.out.println("Writing files a.txt and b.txt to current master " + baseDir
           + "localhost_12001" + "/filestore");
@@ -126,12 +77,14 @@ public class IntegrationTest {
           "some_data in b");
       listFiles(baseDir);
 
-      for (int i = 0; i < 100; i++) {
-        String fileName = "/filestore/" + String.valueOf(i).toString() + ".txt";
-        FileUtils.writeStringToFile(new File(baseDir + "localhost_12002" + fileName),
-                "some_data in " + fileName);
-        Thread.sleep(5000);
-      }
+      Thread.sleep(10000);
+
+      System.out.println("Writing files c.txt and d.txt to current master " + baseDir
+          + "localhost_12001" + "/filestore");
+      FileUtils.writeStringToFile(new File(baseDir + "localhost_12001" + "/filestore/c.txt"),
+          "some_data in c");
+      FileUtils.writeStringToFile(new File(baseDir + "localhost_12001" + "/filestore/d.txt"),
+          "some_data in d");
       listFiles(baseDir);
     } catch (Exception e) {
       e.printStackTrace();
